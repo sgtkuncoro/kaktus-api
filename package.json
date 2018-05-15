@@ -1,0 +1,18 @@
+{
+  "name": "kaktus-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node -- src/index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0"
+  },
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
