@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
     confirmed: {
         type: Boolean,
         default: false
+    },
+    confirmationToken: {
+        type: String,
+        default: ""
     }
 }, {
     timestamps: true
@@ -28,13 +32,18 @@ userSchema.methods.setPassword = function setPassword(password) {
     this.passwordHash = bcrypt.hashSync(password, 10)
 }
 
+userSchema.methods.setConfimationToken = function setConfimationToken() {
+    this.confirmationToken = this.generateJWT();
+}
+
 userSchema.methods.isValidPassword = function isValidPassword(password) {
     return bcrypt.compareSync(password, this.passwordHash)
 }
 
 userSchema.methods.generateJWT = function generateJWT() {
     return jwt.sign({
-        email: this.email
+        email: this.email,
+        confirmed: this.confirmed
     }, process.env.JWT_SECRET);
 }
 
@@ -44,6 +53,10 @@ userSchema.methods.toAuthJSON = function toAuthJSON() {
         confirmed: this.confirmed,
         token: this.generateJWT()
     }
+}
+
+userSchema.methods.generateConfirmationUrl = function generateConfirmationUrl() {
+    return `${process.env.HOST}/confirmation/${this.confirmationToken}`
 }
 
 userSchema.plugin(uniqueValidator, {
