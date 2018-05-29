@@ -47,6 +47,14 @@ userSchema.methods.generateJWT = function generateJWT() {
     }, process.env.JWT_SECRET);
 }
 
+userSchema.methods.generateResetPasswordToken = function generateResetPasswordToken() {
+    return jwt.sign({
+        _id: this._id
+    }, process.env.JWT_SECRET, {
+        expiresIn: "1h"
+    });
+}
+
 userSchema.methods.toAuthJSON = function toAuthJSON() {
     return {
         email: this.email,
@@ -57,6 +65,10 @@ userSchema.methods.toAuthJSON = function toAuthJSON() {
 
 userSchema.methods.generateConfirmationUrl = function generateConfirmationUrl() {
     return `${process.env.HOST}/confirmation/${this.confirmationToken}`
+}
+
+userSchema.methods.generateResetPasswordLink = function generateResetPasswordLink(){
+    return `${process.env.HOST}/reset_password/${this.generateResetPasswordToken()}`
 }
 
 userSchema.plugin(uniqueValidator, {

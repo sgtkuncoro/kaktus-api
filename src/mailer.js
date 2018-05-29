@@ -36,3 +36,27 @@ export function sendConfirmationEmail(user) {
         }
     })
 }
+
+export function sendResetPasswordEmail(user) {
+    const transport = setup();
+    const email = {
+        from,
+        to: user.email,
+        subject: "Reset Password",
+        text: `
+
+        For reset your password please followe this link:
+
+        ${user.generateResetPasswordLink()}
+        
+        `
+    }
+
+    transport.sendMail(email, function(err, res){
+        if(err){
+            console.log(err)
+        } else {
+            console.log(res)
+        }
+    })
+}
